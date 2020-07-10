@@ -7,13 +7,13 @@
    
 </head>
 <body>
-    <p id="title">ぽん・で・すぴーく</p>
+    <!-- <p id="title">ぽん・で・すぴーく</p> -->
     <div class="dog">  
-        <img class="base" src="./dog_base.png">
+        <img class="base" src="./dog_yellow.png">
         <canvas id="mouth" width="200" height="200"></canvas>
         <img class="face" src="./dog_face.png">
         <canvas id="mabuta" width="200" height="60"></canvas>
-        <p id="msg">TAP & TALK!</p>
+        <p id="msg">......................</p>
         <!-- <img class="mofu" src="./mofu.png"> -->
     </div>
 </body>
@@ -45,7 +45,7 @@ function speech2text(event) {
     const synthes = new SpeechSynthesisUtterance(text);
     synthes.rate = 1.2 // 速度 0.1-10 初期値:1 (倍速なら2, 半分の倍速なら0.5)
     synthes.pitch = 1.2 // 高さ 0-2 初期値:1
-    synthes.volume = 0.75 // 音量 0-1 初期値:1
+    synthes.volume = 1 // 音量 0-1 初期値:1
 
     speechSynthesis.speak(synthes);
     synthes.onend = () => {
@@ -214,8 +214,10 @@ const talk = () => {
 
 <style type="text/css">
 * {
-    background-color: #ecc9ac;    
+    background-color: #ecc9ac5b;    
+    /* background-color: #ffc40049; */
 }
+
 
 body {
     display: flex;
@@ -229,18 +231,23 @@ body {
     justify-content: center;
     align-items: center;              
     position: relative;
-    /* background-color: rgba(0, 255, 255, 0.144);                            */
+    /* background-color: rgba(0, 255, 255, 0.692);                            */
+}
+
+@media only screen and (max-device-width : 480px) {
+  	.base { 
+ 		width:100%;
+  	}
 }
 
 .base {
-    width: 55mm;
-    /* background-color: rgba(255, 228, 196, 0.445); */
+    width: 56mm;
 }
 
 .dog #msg {
     position: absolute;
     top: 62%;
-    width: 130px;
+    width: 140px;
     background-color: rgba(34, 22, 0, 0.11);
     border-radius: 8px;
     color: rgba(85, 37, 35, 0.76); 
@@ -253,21 +260,21 @@ body {
 #mabuta {
     position: absolute;
     background-color: #ff000000;
-    top: 22%;
+    top: 14%;
 }
 
 .face {
     position: absolute;
-    top: 31%;  
+    top: 23%;  
     background-color: rgba(0, 0, 0, 0);
-    width: 31mm; 
+    width: 32mm; 
     height: auto;
 }
 
 #mouth {
     position: absolute;
     background-color: #9e302200;
-    top: 16%;
+    top: 6.5%;
 }
 
 .mofu {
