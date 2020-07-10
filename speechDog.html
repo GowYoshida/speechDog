@@ -10,10 +10,10 @@
     <!-- <p id="title">ぽん・で・すぴーく</p> -->
     <div class="dog">  
         <img class="base" src="./dog_yellow.png">
-        <canvas id="mouth" width="200" height="200"></canvas>
+        <canvas id="mouth" width="200" height="300"></canvas>
         <img class="face" src="./dog_face.png">
-        <canvas id="mabuta" width="200" height="60"></canvas>
-        <p id="msg">......................</p>
+        <canvas id="mabuta" width="300" height="200"></canvas>
+        <p id="msg">.......................</p>
         <!-- <img class="mofu" src="./mofu.png"> -->
     </div>
 </body>
@@ -94,7 +94,7 @@ const draw = () => {
                 ctx.clearRect(0, 0, canvas.width, canvas.height);
                 if(flag){
                     ctx.translate(30, step++);
-                    if(step>30) {
+                    if(step>50) {
                         flag = false;
                     }
                 } else {
@@ -105,15 +105,17 @@ const draw = () => {
                 }
                 ctx.fillStyle="#ffc400e1" // 塗りつぶし色
                 // ctx.fillStyle="#000000"
-                ctx.fillRect(0, 0, 40, 30) // 正方形を描画
-                ctx.fillRect(100, 0, 40, 30)
+                // ctx.fillRect(0, 0, 40, 30) // 正方形を描画
+                // ctx.fillRect(100, 0, 40, 30)
+                ctx.fillRect(0, 0, 60, 50) // スマホ位置
+                ctx.fillRect(180, 0, 60, 50)
                 ctx.restore(); // 描画スタイルを復元（初期状態に戻す）
                 
                 count++;
-                if(count > 60*2){
+                if(count > 50*2*2){
                     clearInterval(mabataki);　//idをclearIntervalで指定している
                 }
-            }, 8);
+            }, 5);
 
             count2++
             if(count2 > 2){ 
@@ -123,7 +125,7 @@ const draw = () => {
     } 
 }
 
-// にっこり
+// 目がにっこり
 const nico = () => {
     const canvas = document.getElementById("mabuta"); 
     if(canvas.getContext) {
@@ -131,9 +133,12 @@ const nico = () => {
         ctx.save();
         ctx.clearRect(0, 0, canvas.width, canvas.height);
         ctx.fillStyle="#ffc400"
+        // ctx.fillStyle="#000000"
         ctx.beginPath();
-        ctx.ellipse(54, 54, 16, 10, 0, 0, 2*Math.PI);
-        ctx.ellipse(148, 54, 16, 10, 0, 0, 2*Math.PI);
+        // ctx.ellipse(54, 54, 16, 10, 0, 0, 2*Math.PI);
+        // ctx.ellipse(148, 54, 16, 10, 0, 0, 2*Math.PI);
+        ctx.ellipse(54*1.25, 54*1.68, 16*1.3, 10*1.65, 0, 0, 2*Math.PI);
+        ctx.ellipse(148*1.57, 54*1.68, 16*1.3, 10*1.65, 0, 0, 2*Math.PI);
         ctx.fill();
         setTimeout(() => {
             draw(); // 読み終えてからの処理
@@ -150,8 +155,8 @@ const talk = () => {
         const ctx = canvas.getContext("2d"); 
 
         let flag = true;
-        let mouse_width = 16;
-        let mouse_height = 12;
+        let mouse_width = 16*1.65;
+        let mouse_height = 12*1.65;
         let count = 0;
         let step = 0;
         // setInterval(イベント, 処理間隔)でイベントを処理間隔ごとに繰り返す
@@ -181,7 +186,7 @@ const talk = () => {
 
             if(flag){
                 ctx.translate(0, step++);
-                if(step>22) {
+                if(step>22*1.65) {
                     flag = false;
                 }
             } else {
@@ -192,16 +197,16 @@ const talk = () => {
             }
             ctx.fillStyle="#9e3122";
             ctx.beginPath();
-            ctx.ellipse(100, 100, mouse_width, mouse_height, 0, 0, 2*Math.PI);
+            ctx.ellipse(100, 100*1.65, mouse_width, mouse_height, 0, 0, 2*Math.PI);
             ctx.fill();
             ctx.restore();
             
             count++;
-            if(count > 40*4 && step === 0){
+            if(count > 40*4*1.65 && step === 0){
                 clearInterval(speak);　//idをclearIntervalで指定している
                 ctx.clearRect(0, 0, canvas.width, canvas.height);
             }    
-        }, 7);
+        }, 7/1.65);
     } 
 }
 
@@ -214,8 +219,8 @@ const talk = () => {
 
 <style type="text/css">
 * {
-    /* background-color: #ecc9ac5b;     */
-    background-color: #ffc400;
+    background-color: #ecc9ac5b;    
+    /* background-color: #ffc400; */
 }
 
 
@@ -223,7 +228,7 @@ body {
     display: flex;
     justify-content: center;
     align-items: center;     
-    height: 90vh;
+    /* height: 90vh; */
 }
 
 .dog {   
@@ -247,7 +252,7 @@ body {
 .dog #msg {
     position: absolute;
     top: 62%;
-    width: 140px;
+    width: 68%;
     background-color: rgba(34, 22, 0, 0.11);
     border-radius: 8px;
     color: rgba(85, 37, 35, 0.76); 
@@ -255,6 +260,13 @@ body {
     font-size: 23px;
     font-weight: bold;
     padding: 0px 10px 0px 10px;
+}
+
+@media only screen and (max-device-width : 480px) {
+  	.dog #msg { 
+        font-size: 40px;
+        border-radius: 14px;
+  	}
 }
 
 #mabuta {
@@ -267,7 +279,7 @@ body {
     position: absolute;
     top: 23%;  
     background-color: rgba(0, 0, 0, 0);
-    width: 32mm; 
+    width: 56%; 
     height: auto;
 }
 
