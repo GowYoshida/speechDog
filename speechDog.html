@@ -137,12 +137,12 @@ const nico = () => {
         ctx.beginPath();
         // ctx.ellipse(54, 54, 16, 10, 0, 0, 2*Math.PI);
         // ctx.ellipse(148, 54, 16, 10, 0, 0, 2*Math.PI);
-        ctx.ellipse(65, 70, 15, 11, 0, 0, 2*Math.PI);
-        ctx.ellipse(185, 70, 15, 11, 0, 0, 2*Math.PI);
+        ctx.ellipse(55, 72, 15, 11, 0, 0, 2*Math.PI);
+        ctx.ellipse(195, 72, 15, 11, 0, 0, 2*Math.PI);
         ctx.fill();
         setTimeout(() => {
             draw(); // 読み終えてからの処理
-        }, 18000);
+        }, 1800);
         // ctx.restore(); // 描画スタイルを復元（初期状態に戻す）
         // cstx.clearRect(0, 0, canvas.width, canvas.height);
     }
@@ -197,7 +197,7 @@ const talk = () => {
             }
             ctx.fillStyle="#9e3122";
             ctx.beginPath();
-            ctx.ellipse(100, 100*1.2, mouse_width, mouse_height, 0, 0, 2*Math.PI);
+            ctx.ellipse(100, 100*1.35, mouse_width, mouse_height, 0, 0, 2*Math.PI);
             ctx.fill();
             ctx.restore();
             
