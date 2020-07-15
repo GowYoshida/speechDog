@@ -27,10 +27,10 @@ window.onclick = function() {
     speech.start();
 };
 
-speech.onsoundend = function() {
+speech.addEventListener("speechend", function() {
     document.getElementById('msg').innerText = ".......................";
     speech.start();
-};
+});
 
 // イベント
 speech.addEventListener('result', speech2text);
