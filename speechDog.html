@@ -27,7 +27,7 @@ window.onclick = function() {
     speech.start();
 };
 
-speech.addEventListener("speechend", function() {
+speech.addEventListener("end", function() {
     document.getElementById('msg').innerText = ".......................";
     speech.start();
 });
