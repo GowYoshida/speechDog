@@ -33,7 +33,7 @@ speech.onaudioend = () => {
     setTimeout(() => {
         document.getElementById('msg').innerText = ".......................";
         speech.start();
-    }, 3000);
+    }, 5000);
 };
 
 // イベント
@@ -245,6 +245,7 @@ async function handler_request_reply(comment){
     const data = await res.json();
     const text = await data.results[0].reply;
 
+    // fetch-thenを使った書き方
     // fetch('https://api.a3rt.recruit-tech.co.jp/talk/v1/smalltalk',{
     //     method: 'post',
     //     body: formdata,
@@ -255,39 +256,39 @@ async function handler_request_reply(comment){
     //         const text = data.results[0].reply;
             //- 出力
             // document.getElementById('talkapi__reply').innerHTML = reply;
+            //     });
+            // });
             
-            // 返答を発話
-            const synthes = new SpeechSynthesisUtterance(text);
-            synthes.rate = 1.2 // 速度 0.1-10 初期値:1 (倍速なら2, 半分の倍速なら0.5)
-            synthes.pitch = 1.2 // 高さ 0-2 初期値:1
-            synthes.volume = 1 // 音量 0-1 初期値:1
-
-            speechSynthesis.speak(synthes);
-            synthes.onend = () => {
-                setTimeout(() => {
-                    nico(); // 読み終えてからの処理
-                    // speech.start();
-                }, 500);
-            }
-
-            // 一文字ずつ表示
-            var count = 0;
-            var printString;
-
-            function disp() {
-                msg.innerText = text.substring(0, count++);
-                if(count <= text.length) {
-                    setTimeout(disp, 90);
-                    // setTimeout(disp, 90, text); OK
-                    // setTimeout(disp(), 90); NG
-                }
-            }
-            disp();
-            talk();
-    //     });
-    // });
+    // 返答を発話
+    const synthes = new SpeechSynthesisUtterance(text);
+    synthes.rate = 1.2 // 速度 0.1-10 初期値:1 (倍速なら2, 半分の倍速なら0.5)
+    synthes.pitch = 1.2 // 高さ 0-2 初期値:1
+    synthes.volume = 1 // 音量 0-1 初期値:1
+    
+    speechSynthesis.speak(synthes);
+    synthes.onend = () => {
+        setTimeout(() => {
+            nico(); // 読み終えてからの処理
+            // speech.start();
+        }, 500);
+    }
+    
+    // 一文字ずつ表示
+    var count = 0;
+    var printString;
+    
+    function disp() {
+        msg.innerText = text.substring(0, count++);
+        if(count <= text.length) {
+            setTimeout(disp, 90);
+            // setTimeout(disp, 90, text); OK
+            // setTimeout(disp(), 90); NG
+        }
+    }
+    disp();
+    talk();
 }
-
+            
 
     // (文字が消えていく)
     // 音声認識開始で目が大きく、認識中はあいずち
