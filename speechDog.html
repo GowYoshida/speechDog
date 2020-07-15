@@ -29,12 +29,12 @@ window.onclick = function() {
 };
 
 //　終了したらリスニング＝認識待ち状態
-speech.addEventListener("audioend", function() {
+speech.onaudioend = () => {
     setTimeout(() => {
         document.getElementById('msg').innerText = ".......................";
         speech.start();
     }, 3000);
-});
+};
 
 // イベント
 speech.addEventListener('result', speech2text);
