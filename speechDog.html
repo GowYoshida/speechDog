@@ -29,7 +29,7 @@ window.onclick = function() {
 };
 
 //　終了したらリスニング＝認識待ち状態
-speech.onsoundend = () => {
+speech.onspeechend = () => {
     setTimeout(() => {
         document.getElementById('msg').innerText = ".......................";
         speech.start();
