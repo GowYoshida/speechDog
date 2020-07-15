@@ -27,9 +27,12 @@ window.onclick = function() {
     speech.start();
 };
 
+//　終了したらリスニング＝認識待ち状態
 speech.addEventListener("end", function() {
-    document.getElementById('msg').innerText = ".......................";
-    speech.start();
+    setTimeout(() => {
+        document.getElementById('msg').innerText = ".......................";
+        speech.start();
+    }, 3000);
 });
 
 // イベント
@@ -60,7 +63,7 @@ function speech2text(event) {
         synthes.onend = () => {
             setTimeout(() => {
                 nico(); // 読み終えてからの処理
-                speech.start();
+                // speech.start();
             }, 500);
         }
         // 一文字ずつ表示
