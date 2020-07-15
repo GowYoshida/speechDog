@@ -21,7 +21,7 @@
 //音声認識APIの使用
 const speech = new webkitSpeechRecognition();
 speech.lang = "ja";　//言語を日本語に設定
-// speech.continuous = true;
+speech.continuous = true;
 
 // 音声認識をスタート
 window.onclick = function() {
@@ -29,7 +29,7 @@ window.onclick = function() {
 };
 
 //　終了したらリスニング＝認識待ち状態
-speech.addEventListener("soundend", function() {
+speech.addEventListener("audioend", function() {
     setTimeout(() => {
         document.getElementById('msg').innerText = ".......................";
         speech.start();
