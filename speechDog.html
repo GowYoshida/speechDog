@@ -7,22 +7,21 @@
     <meta name="viewport" content="width=device-width">
 </head>
 <body>
-    <!-- <p id="title">ぽん・で・すぴーく</p> -->
     <div class="dog">  
         <img class="base" src="./dog_yellow2.png">
         <canvas id="mouth" width="200" height="200"></canvas>
         <img class="face" src="./dog_face.png">
         <canvas id="mabuta" width="250" height="200"></canvas>
         <p id="msg">.......................</p>
-        <!-- <img class="mofu" src="./mofu.png"> -->
+        <p id="msg2">_</p>
     </div>
 </body>
 
 <script>    
 //音声認識APIの使用
 const speech = new webkitSpeechRecognition();
-//言語を日本語に設定
-speech.lang = "ja";
+speech.lang = "ja";　//言語を日本語に設定
+
 // 音声認識をスタート
 window.onclick = function() {
     speech.start();
@@ -36,39 +35,45 @@ function speech2text(event) {
     let text = event.results[0][0].transcript;
     
     // 音声認識で取得した情報を、コンソール画面に表示
-    console.log(text);
-    
+    // console.log(text);
+
     // 認識された「言葉(text)」を、表示用のdivタグに代入する
-    // const msg = document.getElementById("msg");
+    const msg = document.getElementById("msg");
 
-    // オウム返し
-    const synthes = new SpeechSynthesisUtterance(text);
-    synthes.rate = 1.2 // 速度 0.1-10 初期値:1 (倍速なら2, 半分の倍速なら0.5)
-    synthes.pitch = 1.2 // 高さ 0-2 初期値:1
-    synthes.volume = 1 // 音量 0-1 初期値:1
+    const msg2 = document.getElementById("msg2");
+    msg2.innerText = text
 
-    speechSynthesis.speak(synthes);
-    synthes.onend = () => {
-        setTimeout(() => {
-            nico(); // 読み終えてからの処理
-            speech.start();
-        }, 500);
-    }
+    // ホットワードの代わり
+    if (text === "ポアロ") {
+        const notice = "はい、、、あ、ワン"
+        const synthes = new SpeechSynthesisUtterance(notice);
+        synthes.rate = 1.2 // 速度 0.1-10 初期値:1 (倍速なら2, 半分の倍速なら0.5)
+        synthes.pitch = 1.2 // 高さ 0-2 初期値:1
+        synthes.volume = 1 // 音量 0-1 初期値:1
+        speechSynthesis.speak(synthes);
 
-    // 一文字ずつ表示
-    var count = 0;
-    var printString;
-
-    function disp() {
-        msg.innerText = text.substring(0, count++);
-        if(count <= text.length) {
-            setTimeout(disp, 90);
-            // setTimeout(disp, 90, text); OK
-            // setTimeout(disp(), 90); NG
+        synthes.onend = () => {
+            setTimeout(() => {
+                nico(); // 読み終えてからの処理
+                speech.start();
+            }, 500);
         }
+        // 一文字ずつ表示
+        var count = 0;
+        var printString;
+
+        function disp() {
+            msg.innerText = notice.substring(0, count++);
+            if(count <= notice.length) {
+                setTimeout(disp, 90);
+            }
+        }
+        disp();
+        talk();
+    } else {
+        // Talk Api
+        handler_request_reply(text);
     }
-    disp();
-    talk();
 }
     
 // まばたき
@@ -76,6 +81,7 @@ window.addEventListener("load", eventWindowLoaded);
 function eventWindowLoaded () { 
     draw();
 }
+
 const draw = () => {
     const canvas = document.getElementById("mabuta"); 
     if(canvas.getContext) {
@@ -210,11 +216,75 @@ const talk = () => {
     } 
 }
 
+// TALK-API
+/* 返答をリクエスト */
+async function handler_request_reply(comment){
+    /* コメント取得 */
+    // const comment = document.getElementById('talkapi__input').value;
+    /* レクエストデータ */
+    let formdata = new FormData();
+    //- apikeyパラメーター 
+    formdata.append('apikey', 'DZZ7ctd6vxw0ucS7RHB3tuVv6JwVs1UC');
+    //- コメント
+    formdata.append('query', comment);
+
+    // /* リクエスト */
+    const res = await fetch('https://api.a3rt.recruit-tech.co.jp/talk/v1/smalltalk',{
+        method: 'post',
+        body: formdata,
+    });
+    const data = await res.json();
+    const text = await data.results[0].reply;
+
+    // fetch('https://api.a3rt.recruit-tech.co.jp/talk/v1/smalltalk',{
+    //     method: 'post',
+    //     body: formdata,
+    // }).then(response => {
+    //     //- レスポンス取得
+    //     response.json().then(data => {
+    //         //- 返答取得
+    //         const text = data.results[0].reply;
+            //- 出力
+            // document.getElementById('talkapi__reply').innerHTML = reply;
+            
+            // 返答を発話
+            const synthes = new SpeechSynthesisUtterance(text);
+            synthes.rate = 1.2 // 速度 0.1-10 初期値:1 (倍速なら2, 半分の倍速なら0.5)
+            synthes.pitch = 1.2 // 高さ 0-2 初期値:1
+            synthes.volume = 1 // 音量 0-1 初期値:1
+
+            speechSynthesis.speak(synthes);
+            synthes.onend = () => {
+                setTimeout(() => {
+                    nico(); // 読み終えてからの処理
+                    speech.start();
+                }, 500);
+            }
+
+            // 一文字ずつ表示
+            var count = 0;
+            var printString;
+
+            function disp() {
+                msg.innerText = text.substring(0, count++);
+                if(count <= text.length) {
+                    setTimeout(disp, 90);
+                    // setTimeout(disp, 90, text); OK
+                    // setTimeout(disp(), 90); NG
+                }
+            }
+            disp();
+            talk();
+    //     });
+    // });
+}
+
+
     // (文字が消えていく)
-    // 発話中は口が動く
     // 音声認識開始で目が大きく、認識中はあいずち
     // ホットワードで認識開始
     // 声を可愛く
+    
 </script>
 
 <style type="text/css">
@@ -249,11 +319,11 @@ body {
   	}
 }
 
-.dog #msg {
+#msg {
     position: absolute;
-    top: 67%;
+    top: 55%;
     width: 65%;
-    background-color: rgba(34, 22, 0, 0.11);
+    /* background-color: rgba(34, 22, 0, 0.11); */
     border-radius: 8px;
     color: rgba(85, 37, 35, 0.76); 
     font-family: "M PLUS Rounded 1c";
@@ -262,10 +332,27 @@ body {
     padding: 0px 10px 0px 10px;
 }
 
+#msg2 {
+    position: absolute;
+    top: 88%;
+    width: 75%;
+    background-color: rgba(34, 22, 0, 0.11);
+    border-radius: 8px;
+    color: rgba(85, 37, 35, 0.507); 
+    font-family: "M PLUS Rounded 1c";
+    font-size: 23px;
+    font-weight: bold;
+    padding: 0px 10px 0px 10px;
+}
+
 @media only screen and (max-device-width : 480px) {
-  	.dog #msg { 
+  	#msg { 
         font-size: 32px;
         border-radius: 10px;
+  	}
+    #msg2 { 
+        font-size: 19px;
+        border-radius: 8px;
   	}
 }
 
