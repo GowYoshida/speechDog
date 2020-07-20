@@ -21,83 +21,54 @@
 //音声認識APIの使用
 const speech = new webkitSpeechRecognition();
 speech.lang = "ja";　//言語を日本語に設定
-// speech.continuous = true;
+
+const msg = document.getElementById("msg");
+const msg2 = document.getElementById("msg2");
+
+
+// イベント
+// まばたきイベント　
+window.addEventListener("load", eventWindowLoaded);
+function eventWindowLoaded () { 
+    draw();
+}
 
 // 音声認識をスタート
 window.onclick = function() {
     speech.start();
 };
 
-//　終了したらリスニング＝認識待ち状態
-speech.onend = () => {
-    // setTimeout(() => {
-        document.getElementById('msg').innerText = ".......................";
-        speech.start();
-    // }, 2700);
-};
+// 音声認識でデータ取得　=>　イベント
+speech.addEventListener('result', text2speech);
 
-// イベント
-speech.addEventListener('result', speech2text);
-    
+
 // 関数
-function speech2text(event) {
+// text2speech
+function text2speech(event) {
     let text = event.results[0][0].transcript;
     
-    // 音声認識で取得した情報を、コンソール画面に表示
-    // console.log(text);
-
     // 認識された「言葉(text)」を、表示用のdivタグに代入する
-    const msg = document.getElementById("msg");
-
-    const msg2 = document.getElementById("msg2");
     msg2.innerText = text
 
     // ホットワードの代わり
     if (text === "ポアロ") {
         const notice = "はい、、、あ、ワン"
-        const synthes = new SpeechSynthesisUtterance(notice);
-        synthes.rate = 1.2 // 速度 0.1-10 初期値:1 (倍速なら2, 半分の倍速なら0.5)
-        synthes.pitch = 1.2 // 高さ 0-2 初期値:1
-        synthes.volume = 1 // 音量 0-1 初期値:1
-        speechSynthesis.speak(synthes);
-
-        synthes.onend = () => {
-            setTimeout(() => {
-                nico(); // 読み終えてからの処理
-                // speech.start();
-            }, 500);
-        }
-        // 一文字ずつ表示
-        var count = 0;
-        var printString;
-
-        function disp() {
-            msg.innerText = notice.substring(0, count++);
-            if(count <= notice.length) {
-                setTimeout(disp, 90);
-            }
-        }
-        disp();
+        synthesis(notice);
+        hitomoji(notice);
         talk();
-    } else {
-        // Talk Api
-        handler_request_reply(text);
+    } else { 
+        handler_request_reply(text); // Talk Api
     }
 }
-    
-// まばたき
-window.addEventListener("load", eventWindowLoaded);
-function eventWindowLoaded () { 
-    draw();
-}
 
+// まばたき
 const draw = () => {
     const canvas = document.getElementById("mabuta"); 
     if(canvas.getContext) {
         const ctx = canvas.getContext("2d"); 
         
         let count2 = 0;
-        matataki = setInterval( () => {
+        matataki = setInterval(() => {
             let step = 0;
             let flag = true;
             let count = 0;
@@ -155,8 +126,9 @@ const nico = () => {
         ctx.ellipse(55, 72, 15, 11, 0, 0, 2*Math.PI);
         ctx.ellipse(195, 72, 15, 11, 0, 0, 2*Math.PI);
         ctx.fill();
+
         setTimeout(() => {
-            draw(); // 読み終えてからの処理
+            draw(); // にっこり->まばたき
         }, 1800);
         // ctx.restore(); // 描画スタイルを復元（初期状態に戻す）
         // cstx.clearRect(0, 0, canvas.width, canvas.height);
@@ -181,23 +153,6 @@ const talk = () => {
             // 初期化
             ctx.clearRect(0, 0, canvas.width, canvas.height);
             ctx.fillStyle="#9e3122";
-
-            // // 楕円を描画
-            // if(flag){
-            //     ctx.beginPath();
-            //     ctx.ellipse(100, 100, mouse_width--, mouse_height++, 0, 0, 2*Math.PI);
-            //     ctx.fill();
-            //     if(mouse_height > 14) {
-            //         flag = false;
-            //     } 
-            // } else {
-            //     ctx.beginPath();
-            //     ctx.ellipse(100, 100, mouse_width++, mouse_height--, 0, 0, 2*Math.PI);
-            //     ctx.fill();
-            //     if(mouse_width > 20) {
-            //         flag = true;
-            //     } 
-            // }
 
             if(flag){
                 ctx.translate(0, step++);
@@ -260,42 +215,52 @@ async function handler_request_reply(comment){
             // });
             
     // 返答を発話
+    synthesis(text);
+    // 一文字ずつ表示
+    hitomoji(text);
+    // 口パク
+    talk();
+}
+
+// 返答を発話
+const synthesis = (text) => {
     const synthes = new SpeechSynthesisUtterance(text);
     synthes.rate = 1.2 // 速度 0.1-10 初期値:1 (倍速なら2, 半分の倍速なら0.5)
     synthes.pitch = 1.2 // 高さ 0-2 初期値:1
     synthes.volume = 1 // 音量 0-1 初期値:1
     
     speechSynthesis.speak(synthes);
+    
     synthes.onend = () => {
         setTimeout(() => {
             nico(); // 読み終えてからの処理
-            // speech.start();
         }, 500);
+        setTimeout(() => {
+            document.getElementById('msg').innerText = ".......................";
+            speech.start();
+        }, 2300)
     }
-    
-    // 一文字ずつ表示
-    var count = 0;
-    var printString;
-    
-    function disp() {
-        msg.innerText = text.substring(0, count++);
-        if(count <= text.length) {
-            setTimeout(disp, 90);
-            // setTimeout(disp, 90, text); OK
-            // setTimeout(disp(), 90); NG
-        }
-    }
-    disp();
-    talk();
 }
-            
+
+// 一文字ずつ表示
+const hitomoji = (text) => {
+        let count = 0;
+        const disp = () => {
+            msg.innerText = text.substring(0, count++);
+            if (count <= text.length) {
+                setTimeout(disp, 90);  // setTimeout(disp(), 90); NG
+            }
+        }
+        disp()
+    }
 
     // (文字が消えていく)
     // 音声認識開始で目が大きく、認識中はあいずち
     // ホットワードで認識開始
     // 声を可愛く
-    
 </script>
+
+
 
 <style type="text/css">
 * {
