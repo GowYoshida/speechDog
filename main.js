@@ -76,12 +76,12 @@ function text2speech(event) {
                 words.push(word);
             })
             let count =  words.length;
-            if (1 < count && count < 2) {
+            if (1 < count && count < 3) {
                 const notice = `${count}回目だよ〜`
                 synthesis(notice);
                 hitomoji(notice);
                 talk();
-            } else if (count >= 2) {
+            } else if (count >= 3) {
                 const notice = `${count}回も言う必要ある？`
                 synthesis(notice);
                 hitomoji(notice);
